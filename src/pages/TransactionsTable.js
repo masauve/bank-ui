@@ -9,8 +9,9 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import logo from './images/bank.png';
-import { getProductList } from './api/ProductApi';
+import logo from '../images/bank.png';
+import { getAccount } from '../api/AccountApi';
+import { useKeycloak } from "@react-keycloak/web";
 
 const StyledTableCell = withStyles((theme) => ({
   head: {
@@ -47,8 +48,10 @@ export default function CustomizedTables() {
   const [products, setProducts] = useState([]);
   useEffect(() => { fetchData()}, [])
 
+  const { keycloak } = useKeycloak();
+
   const fetchData = async () => {
-    const res = await getProductList();
+    const res = await getAccount(keycloak.token);
     console.log(res);
     setProducts(res);
   }
