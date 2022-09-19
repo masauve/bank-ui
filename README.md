@@ -7,12 +7,28 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Available Scripts
 
-In the project directory, you can run:
+
+### This apps uses .env to run locally, it need to be define
+
+Define a file in a .env containing the different values
+```
+PORT=8080
+
+REACT_APP_REACT_KEYCLOAK_URL=[TBD]
+REACT_APP_KEYCLOAK_REALM=[TBD]
+REACT_APP_KEYCLOAK_CLIENTID=[TBD]
+
+REACT_APP_ACCOUNT_SERVICE=[TBD]
+```
+
+In the project directory, you can now run:
 
 ### `npm start`
 
+
+
 Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Open [http://localhost:8080](http://localhost:8080) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
