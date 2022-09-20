@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bank-ui-config
+  namespace: [TBD]
+data:
+  PORT: '8080'
+  REACT_APP_KEYCLOAK_URL: [TBD]
+  REACT_APP_KEYCLOAK_REALM: [TBD]
+  REACT_APP_KEYCLOAK_CLIENTID: [TBD]
+  REACT_APP_ACCOUNT_SERVICE: [TBD]
