@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from '@material-ui/core/styles';
 import bkgImage from '../images/david-dvoracek-QiPe0UpC0_U-unsplash.jpg';
-import HomeNavigation from  './HomePageNavigation';
+import HomePageNavigation from  './HomePageNavigation';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,29 +28,22 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
 }));
 
-const Home = () => {
+const HomePage = () => {
   const classes = useStyles();
 
   return (
-    <Grid container component="main" className={classes.root}>
+    <Grid container className={classes.root}>
       <CssBaseline />
-      <Grid container component="body" className={classes.body}>
-        <Grid item xs={false} sm={4} md={6} className={classes.image} />
-        <Grid item xs={12} sm={8} md={6} component={Paper} elevation={6} square>
-          <HomeNavigation/>
+      <Grid container className={classes.body}>
+        <Grid item xs={4} sm={4} md={4} className={classes.image} />
+        <Grid item xs={8} sm={8} md={8} component={Paper} elevation={6} square>
+          <HomePageNavigation/>
        </Grid>
       </Grid>
     </Grid>
   );
 };
 
-export default Home;
+export default HomePage;

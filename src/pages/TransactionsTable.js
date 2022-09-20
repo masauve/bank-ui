@@ -1,89 +1,84 @@
-import React from 'react';
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import { useState, useEffect } from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
+import React, { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import logo from '../images/bank.png';
-import { getAccount } from '../api/AccountApi';
-import { useKeycloak } from "@react-keycloak/web";
-
-const StyledTableCell = withStyles((theme) => ({
-  head: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  body: {
-    fontSize: 14,
-  },
-}))(TableCell);
-
-const StyledTableRow = withStyles((theme) => ({
-  root: {
-    '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
-    },
-  },
-}))(TableRow);
+import depositLogo from '../images/bank-deposit-icon.png';
+import creditLogo from '../images/creditCard.png';
+import { useParams } from 'react-router-dom';
+import { useKeycloak } from '@react-keycloak/web';
+import { getAccountTransactions } from '../api/AccountApi';
+import moment from 'moment';
 
 const useStyles = makeStyles((theme) => ({
-  table: {
-    minWidth: 200,
+  root: {
+    flexGrow: 1,
   },
   paper: {
-    margin: theme.spacing(8, 4),
+    padding: theme.spacing(2),
+    margin: 'auto',
+  },
+  img: {
+    //    margin: theme.spacing(8, 4),
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     alignItems: 'center',
+  
   },
 }));
 
-export default function CustomizedTables() {
+export default function ComplexGrid() {
   const classes = useStyles();
-  const [products, setProducts] = useState([]);
+  const [transactions, setTransactions] = useState([]);
   useEffect(() => { fetchData()}, [])
+  
+  let { accountid } = useParams();
 
   const { keycloak } = useKeycloak();
 
   const fetchData = async () => {
-    const res = await getAccount(keycloak.token);
+    const res = await getAccountTransactions(keycloak.token, accountid);
     console.log(res);
-    setProducts(res);
+    setTransactions(res);
   }
-  
+
   return (
     <div className={classes.paper}>
-            <img src={logo} alt='logo'/>
-            <Typography component="h1" variant="h4">
-                Transactions
-            </Typography>
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Transaction ID</StyledTableCell>
-            <StyledTableCell align="right">Type</StyledTableCell>
-            <StyledTableCell align="right">Amount</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {products.map((row) => (
-            <StyledTableRow>
-              <StyledTableCell component="th" scope="row">
-                {row.name}
-              </StyledTableCell>
-              <StyledTableCell align="right">{row.size}</StyledTableCell>
-              <StyledTableCell align="right">{row.price}&nbsp;($)</StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          <Typography gutterBottom component="h1" variant="h4">
+              Comptes - {accountid}
+          </Typography>
+    <div className={classes.root}>
+      <Paper className={classes.paper}>
+      {transactions.map((row, index) => (
+        <Grid key={index} container spacing={2} style={{borderBottom:'2px solid grey' }}>
+          <Grid item className={classes.img} >
+            <img alt="complex" className={classes.img} src={ row.debitcreditmemo === 'DEPOSIT' ? depositLogo : creditLogo }/>
+          </Grid>
+          <Grid item xs={12} sm container>
+            <Grid item xs container direction="column" spacing={2}>
+              <Grid item xs>
+              <Typography variant="subtitle2" color="textSecondary">
+                  {moment(row.postedtimestamp).format('MMMM Do YYYY')}
+                </Typography>
+                <Typography variant="h6">
+                  {row.transactiondescription}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {row.transactioncategory}
+                </Typography>
+                <Typography variant="caption" color="textSecondary">
+                  ID: {row.transactionid}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid item>
+              <Typography variant="h6">$ {row.amount}</Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      ))}
+      </Paper>
+    </div>
     </div>
   );
 }

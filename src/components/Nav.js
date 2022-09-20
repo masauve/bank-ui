@@ -28,9 +28,9 @@ const useStyles = makeStyles((theme) => ({
  const classes = useStyles();
 
     return (
-        <Grid container component="main" className={classes.root}>
+        <Grid container className={classes.root}>
           <CssBaseline/>
-          <Grid container component="body" className={classes.body}>
+          <Grid container className={classes.body}>
             <Grid item xs={false} sm={4} md={6}>
             <ul>
                 <li>
@@ -39,8 +39,8 @@ const useStyles = makeStyles((theme) => ({
                   </a>
                 </li>
                 <li>
-                  <a className="hover:text-blue-800" href="/secured">
-                    Accounts
+                  <a className="hover:text-blue-800" href="/secured/account">
+                    Account
                   </a>
                 </li>
               </ul>
