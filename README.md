@@ -47,5 +47,49 @@ Your app is ready to be deployed!
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 
+### Deploy and Run in OpenShift
+
+To run this example inside and OpenShift cluster. We assume that you have the proper setup
+
+#### Pre requisite
+* an 4.X OpenShift install
+* The proper cli on your machine
+* a clone/fork of the git repo
+* An instance of RH SSO / Keycloak running
+* The required endpoint if you want the service to work.
+
+#### Setup
+
+1. Connec to openshift using cli
+1. Create a project
+    ```
+    oc new-project bank-ui
+    ``` 
+1. Deploy the code
+    ```
+    oc new-app https://github.com/froberge/bank-ui
+    ```
+1. Expose the service and retrive the url
+    ```
+    oc get services
+    oc expose svc [service_name]
+    oc get route [route_name] --template='http://{{.spec.host}}'
+    ```
+
+    :fire: Currently the apps won't work. We need to add the configMap.
+
+1. Deploy the config map. 
+:warning: Make sure you have enter the proper value for the different variables.
+
+    ```
+    oc apply -f [github-project]/openshift/configMap.yaml
+    ```
+1. Assign the configmap as env variable
+    ```
+    oc set env --from=configmap/banque-ui-config deploy/bank-ui
+    ```    
+
+ :boom: Refresh page it should now work.
+
 ## Authors
 [Felix Roberge](https://github.com/roberge.felix@gmail.com)
