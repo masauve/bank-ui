@@ -6,7 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import logo from '../images/bank.png';
 import { useKeycloak } from '@react-keycloak/web';
 import { getAccounts } from '../api/AccountApi';
-import moment from 'moment';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
