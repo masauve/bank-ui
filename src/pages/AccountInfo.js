@@ -5,10 +5,9 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import depositLogo from '../images/bank-deposit-icon.png';
 import creditLogo from '../images/creditCard.png';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useKeycloak } from '@react-keycloak/web';
-import { getAccountTransactions } from '../api/AccountApi';
-import moment from 'moment';
+import { getAccount } from '../api/AccountApi';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,62 +16,66 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     padding: theme.spacing(2),
     margin: 'auto',
+    maxWidth: 700,
+  },
+  image: {
+    width: 128,
+    height: 128,
   },
   img: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
   },
 }));
 
 export default function ComplexGrid() {
   const classes = useStyles();
-  const [transactions, setTransactions] = useState([]);
+  const [accounts, setAccounts] = useState([]);
   useEffect(() => { fetchData()}, [])
-  
-  let { accountid } = useParams();
 
   const { keycloak } = useKeycloak();
+  let { accountid } = useParams();
 
   const fetchData = async () => {
-    const res = await getAccountTransactions(keycloak.token, accountid);
+    const res = await getAccount(keycloak.token, accountid );
     console.log(res);
-    setTransactions(res);
+    setAccounts(res);
   }
 
   return (
     <div className={classes.paper}>
           <Typography gutterBottom component="h1" variant="h4">
-              Comptes - {accountid}
+          Comptes - {accountid}
           </Typography>
     <div className={classes.root}>
       <Paper className={classes.paper}>
-      {transactions.map((row, index) => (
-        <Grid key={index} container spacing={2} style={{borderBottom:'2px solid grey' }}>
+      {accounts.map((row, index) => (
+        <Grid key={index} container spacing={2} >
           <Grid item className={classes.img} >
             <img alt="complex" className={classes.img} src={ row.debitcreditmemo === 'DEPOSIT' ? depositLogo : creditLogo }/>
           </Grid>
-          <Grid item xs={12} sm container>
+          <Grid item xs={10} sm container>
             <Grid item xs container direction="column" spacing={2}>
               <Grid item xs>
-              <Typography variant="subtitle2" color="textSecondary">
-                  {moment(row.postedtimestamp).format('MMMM Do YYYY')}
-                </Typography>
-                <Typography variant="h6">
-                  {row.transactiondescription}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                  {row.transactioncategory}
-                </Typography>
-                <Typography variant="caption" color="textSecondary">
-                  ID: {row.transactionid}
-                </Typography>
+              <Typography variant="h6" >
+                  {row.account_description} en {row.currencycode}
+              </Typography>
+              <Typography variant="subtitle1" component={Link} to={"/secured/account/"+row.accountid+"/transactions"}>
+                  {row.nickname}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                  {row.displayname}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                  Statut: {row.account_status}
+              </Typography>
               </Grid>
-            </Grid>
-            <Grid item>
-              <Typography variant="h6">$ {row.amount}</Typography>
-            </Grid>
+          </Grid>
+          <Grid item>
+            <Typography variant="h6">$ {row.currentbalance}</Typography>
+          </Grid>
           </Grid>
         </Grid>
       ))}
