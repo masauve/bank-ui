@@ -23,9 +23,10 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-  const Nav = () => {
+ const Nav = () => {
  const { keycloak } = useKeycloak();
  const classes = useStyles();
+ const logoutOptions = { redirectUri : process.env.REACT_APP_KEYCLOAK_REDIRECT_URL };
 
     return (
         <Grid container className={classes.root}>
@@ -61,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
                     <button
                     type="button"
                     className="button-logout"
-                    onClick={() => keycloak.logout()}
+                    onClick={() => keycloak.logout(logoutOptions)}
                     >
                     Logout ({keycloak.tokenParsed.preferred_username})
                     </button>
